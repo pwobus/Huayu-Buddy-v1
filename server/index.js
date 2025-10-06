@@ -5,14 +5,27 @@ import fs from 'fs';
 import path from 'path';
 import express from 'express';
 import cors from 'cors';
+import dotenv from 'dotenv';
 import OpenAI from 'openai';
-import { fileURLToPath } from 'url';
+import { fileURLToPath, pathToFileURL } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname  = path.dirname(__filename);
 
-const PORT      = process.env.PORT || 8787;
+const PORT      = Number(process.env.PORT) || 8787;
 const BUILD_DIR = path.join(__dirname, '..', 'build');
+
+const envCandidates = [
+  path.join(process.cwd(), '.env'),
+  path.join(__dirname, '..', '.env')
+];
+
+for (const candidate of envCandidates) {
+  if (fs.existsSync(candidate)) {
+    dotenv.config({ path: candidate });
+    break;
+  }
+}
 
 const app = express();
 app.disable('x-powered-by');
@@ -134,21 +147,71 @@ app.get('/api/config', (_req, res) => {
 });
 
 
-// ---- Conditionally serve UI ----
-const hasBuild = fs.existsSync(BUILD_DIR);
-if (hasBuild && process.env.SERVE_UI !== 'false') {
-  app.use(express.static(BUILD_DIR));
-  app.get('*', (_req, res) => res.sendFile(path.join(BUILD_DIR, 'index.html')));
-} else {
-  app.get('/', (_req, res) => {
-    res.type('text/plain').send(
-      `Huayu Buddy API running.\nMode: ${hasBuild ? 'ui+api' : 'api-only'} @ ${BUILD_DIR}\nUse CRA in dev or npm run build for prod.`
-    );
+let serverInstance;
+let uiConfigured = false;
+
+const configureUiRoutes = (serveUi) => {
+  if (uiConfigured) return;
+  uiConfigured = true;
+  const hasBuild = fs.existsSync(BUILD_DIR);
+  if (hasBuild && serveUi) {
+    app.use(express.static(BUILD_DIR));
+    app.get('*', (_req, res) => res.sendFile(path.join(BUILD_DIR, 'index.html')));
+  } else {
+    app.get('/', (_req, res) => {
+      res.type('text/plain').send(
+        `Huayu Buddy API running.\nMode: ${hasBuild ? 'ui+api' : 'api-only'} @ ${BUILD_DIR}\nUse CRA in dev or npm run build for prod.`
+      );
+    });
+  }
+};
+
+export const createServer = async (options = {}) => {
+  if (serverInstance) return serverInstance;
+
+  const {
+    port = PORT,
+    serveUi = process.env.SERVE_UI !== 'false',
+    quiet = false
+  } = options;
+
+  configureUiRoutes(serveUi);
+
+  serverInstance = await new Promise((resolve, reject) => {
+    const listener = app.listen(port, () => {
+      if (!quiet) {
+        console.log(`[server] listening on http://localhost:${port}`);
+        console.log(`[server] UI mode: ${fs.existsSync(BUILD_DIR) && serveUi ? 'ui+api' : 'api-only'}`);
+      }
+      resolve(listener);
+    });
+    listener.on('error', (err) => {
+      serverInstance = undefined;
+      reject(err);
+    });
+    listener.on('close', () => {
+      serverInstance = undefined;
+    });
+  });
+
+  return serverInstance;
+};
+
+const isDirectRun = (() => {
+  try {
+    return pathToFileURL(process.argv[1] || '').href === import.meta.url;
+  } catch (err) {
+    return false;
+  }
+})();
+
+if (isDirectRun) {
+  createServer().catch((err) => {
+    console.error('[server] failed to start', err);
+    process.exitCode = 1;
   });
 }
 
-app.listen(PORT, () => {
-  console.log(`[server] listening on http://localhost:${PORT}`);
-  console.log(`[server] UI mode: ${hasBuild ? 'ui+api' : 'api-only'}`);
-});
+export default createServer;
+export { app };
 
