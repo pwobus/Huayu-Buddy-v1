@@ -69,14 +69,17 @@
     "extends": null,
     "appId": "com.huayubuddy.desktop",
     "productName": "Huayu Buddy",
-    "files": [
-      "build/**/*",
-      "electron/**/*",
-      "server/**/*",
-      "package.json",
-      "package-lock.json",
-      "!server/node_modules/**"
-    ],
+{
+  "files": [
+    "build/**/*",
+    "electron/**/*",
+    "server/**/*",
+    "node_modules/**/*",
+    "package.json",
+    "package-lock.json",
+    "!server/node_modules/**"
+  ]
+}
     "extraMetadata": {
       "main": "electron/main.js"
     },
