@@ -1,0 +1,60 @@
+{
+  "name": "huayu-buddy",
+  "version": "1.0.0",
+  "private": true,
+  "proxy": "http://localhost:8787",
+  "scripts": {
+    "start": "react-scripts start",
+    "server": "node server/index.js",
+    "dev": "concurrently -k \"npm:start\" \"npm:server\""
+  },
+  "dependencies": {
+    "@craco/craco": "7.1.0",
+    "@react-three/drei": "9.56.4",
+    "@react-three/fiber": "8.13.6",
+    "ajv": "6.12.6",
+    "ajv-keywords": "3.5.2",
+    "autoprefixer": "10.4.12",
+    "concurrently": "^8.2.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "openai": "^6.1.0",
+    "pdfjs-dist": "3.4.120",
+    "postcss": "8.4.18",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-scripts": "5.0.1",
+    "tailwindcss": "3.2.4",
+    "three": "0.153.0",
+    "zustand": "4.4.0"
+  },
+  "devDependencies": {
+    "eslint": "8.57.0",
+    "eslint-plugin-react-hooks": "4.6.0",
+    "husky": "9.1.0",
+    "lint-staged": "15.2.8",
+    "prettier": "3.3.3"
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx}": [
+      "eslint --max-warnings=0",
+      "prettier -w"
+    ],
+    "src/**/*.{css,md,json}": [
+      "prettier -w"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
