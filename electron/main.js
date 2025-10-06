@@ -114,6 +114,6 @@ app.on('before-quit', async (event) => {
   } catch (err) {
     console.error('[electron] failed to close server', err);
   } finally {
-    app.exit();
+    app.quit();
   }
 });
