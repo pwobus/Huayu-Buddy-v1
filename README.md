@@ -188,3 +188,37 @@ Ensure your root package.json contains:
 
 { "proxy": "http://localhost:8787" }
 
+## 2) Electron Desktop Build
+
+Package the React UI and Express API into a single Electron application (no external Node server required).
+
+### Prerequisites
+
+```bash
+npm install
+```
+
+### Run the desktop app in development
+
+This launches the CRA dev server (:3000), the API server (:8787), and an Electron shell that points at the dev UI.
+
+```bash
+npm run electron:dev
+```
+
+### Create a portable Windows .exe (no installer)
+
+Build the production React bundle, embed it in Electron, and emit a single portable executable under `dist/`:
+
+```bash
+npm run electron:build
+```
+
+Result: `dist/HuayuBuddy-<version>-portable.exe`
+
+- Runs offline with the bundled Express API + React UI.
+- No console window.
+- Users can double-click the `.exe` directly; no installer required.
+
+> Tip: place an `.env` file alongside the executable (or set system environment variables) so the bundled server can read `OPENAI_API_KEY`.
+

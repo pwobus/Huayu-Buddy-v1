@@ -2,11 +2,15 @@
   "name": "huayu-buddy",
   "version": "1.0.0",
   "private": true,
+  "main": "electron/main.js",
   "proxy": "http://localhost:8787",
   "scripts": {
     "start": "react-scripts start",
+    "build": "react-scripts build",
     "server": "node server/index.js",
-    "dev": "concurrently -k \"npm:start\" \"npm:server\""
+    "dev": "concurrently -k \"npm:start\" \"npm:server\"",
+    "electron:dev": "concurrently -k \"cross-env BROWSER=none npm run start\" \"wait-on http://localhost:3000 && cross-env ELECTRON_START_URL=http://localhost:3000 electron .\"",
+    "electron:build": "npm run build && cross-env NODE_ENV=production SERVE_UI=true electron-builder --win portable --x64"
   },
   "dependencies": {
     "@craco/craco": "7.1.0",
@@ -30,11 +34,15 @@
     "zustand": "4.4.0"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
+    "electron": "^30.0.3",
+    "electron-builder": "^25.1.8",
     "eslint": "8.57.0",
     "eslint-plugin-react-hooks": "4.6.0",
     "husky": "9.1.0",
     "lint-staged": "15.2.8",
-    "prettier": "3.3.3"
+    "prettier": "3.3.3",
+    "wait-on": "^7.2.0"
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx}": [
@@ -56,5 +64,29 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "build": {
+    "appId": "com.huayubuddy.desktop",
+    "productName": "Huayu Buddy",
+    "files": [
+      "build/**/*",
+      "electron/**/*",
+      "server/**/*",
+      "package.json",
+      "package-lock.json",
+      "!server/node_modules/**"
+    ],
+    "asar": true,
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "HuayuBuddy-${version}-portable.exe"
+    }
   }
 }

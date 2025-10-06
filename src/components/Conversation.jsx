@@ -214,7 +214,7 @@ export default function Conversation() {
 
   // STT engine
   const hasSR = typeof window !== 'undefined' && (window.SpeechRecognition || window.webkitSpeechRecognition);
-  const [sttEngine, setSttEngine] = useState(() => localStorage.getItem('hb_sttEngine') || 'auto');
+  const [sttEngine, _setSttEngine] = useState(() => localStorage.getItem('hb_sttEngine') || 'auto');
   const engineResolved = sttEngine === 'auto' ? (hasSR ? 'browser' : 'whisper') : sttEngine;
 
   // STT states
@@ -231,7 +231,7 @@ export default function Conversation() {
   // Mic selection
   const [selectedMicId, setSelectedMicId] = useState(() => localStorage.getItem('hb_micId') || '');
   useEffect(() => { try { localStorage.setItem('hb_micId', selectedMicId); } catch {} }, [selectedMicId]);
-  const [micDevices, setMicDevices] = useState([]);
+  const [_micDevices, setMicDevices] = useState([]);
   useEffect(() => {
     let mounted = true;
     const enumerate = async () => {
