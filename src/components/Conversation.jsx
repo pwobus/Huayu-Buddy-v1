@@ -524,7 +524,7 @@ export default function Conversation() {
   // Audio unlock + diagnostics
   const [audioUnlocked, setAudioUnlocked] = useState(false);
   const runAudioDiagnostics = useCallback(async () => {
-   /* const log = (...a) => console.log('[diag]', ...a);*/
+    const log = (...a) => console.log('[diag]', ...a);
     log('Starting diagnostics…');
     const ctx = (() => { try { return new (window.AudioContext || window.webkitAudioContext)(); } catch { return null; } })();
     if (!ctx) { pushToast('No AudioContext', 'error'); return; }
