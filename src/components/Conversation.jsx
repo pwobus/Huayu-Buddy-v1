@@ -333,7 +333,7 @@ export default function Conversation() {
       console.error('[hb-tts zh] failed', e);
       pushToast('Chinese TTS failed.', 'error');
     }
-  }, [useOpenAITts, status.voices, voiceZhUri, speakSlow, setIsSpeaking, openaiVoiceZh, ttsModel]);
+  }, [pushToast, useOpenAITts, status.voices, voiceZhUri, speakSlow, setIsSpeaking, openaiVoiceZh, ttsModel]);
 
   const speakGeneric = useCallback(async (text, lang) => {
     try {
@@ -357,7 +357,7 @@ export default function Conversation() {
       console.error('[hb-tts generic] failed', e);
       pushToast('TTS failed.', 'error');
     }
-  }, [useOpenAITts, status.voices, voiceZhUri, voiceEnUri, speakSlow, setIsSpeaking, openaiVoiceZh, openaiVoiceEn, ttsModel]);
+  }, [pushToast,useOpenAITts, status.voices, voiceZhUri, voiceEnUri, speakSlow, setIsSpeaking, openaiVoiceZh, openaiVoiceEn, ttsModel]);
 
   // ---- Chat ----
   const callGPT = useCallback(async (userInput, { temp = 0.4, practiceFocus = null } = {}) => {
@@ -408,7 +408,7 @@ export default function Conversation() {
       if (speakEnglishDelay > 0) await new Promise((r2) => setTimeout(r2, speakEnglishDelay));
       await speakGeneric(parsed.english, 'en-US');
     }
-  }, [showEnglish, speakEnglish, speakEnglishDelay, vocabulary, addToHistory, userResponse, speakZhTutor, speakGeneric, vocabPolicy, topic, chatModel]);
+  }, [pushToast,showEnglish, speakEnglish, speakEnglishDelay, vocabulary, addToHistory, userResponse, speakZhTutor, speakGeneric, vocabPolicy, topic, chatModel]);
 
   // greet once after vocab
   const firstRunRef = useRef(true);
@@ -524,7 +524,7 @@ export default function Conversation() {
   // Audio unlock + diagnostics
   const [audioUnlocked, setAudioUnlocked] = useState(false);
   const runAudioDiagnostics = useCallback(async () => {
-    const log = (...a) => console.log('[diag]', ...a);
+   /* const log = (...a) => console.log('[diag]', ...a);*/
     log('Starting diagnostics…');
     const ctx = (() => { try { return new (window.AudioContext || window.webkitAudioContext)(); } catch { return null; } })();
     if (!ctx) { pushToast('No AudioContext', 'error'); return; }
