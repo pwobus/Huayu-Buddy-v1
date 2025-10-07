@@ -1,5 +1,7 @@
 {
   "name": "huayu-buddy",
+  "author": "pw",
+  "description": "AI powered Chinese language tutor",
   "version": "1.0.0",
   "private": true,
   "main": "electron/main.js",
@@ -23,7 +25,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.6.1",
     "express": "^4.21.2",
-    "openai": "^6.1.0",
+    "openai": "^6.2.0",
     "pdfjs-dist": "3.4.120",
     "postcss": "8.4.18",
     "react": "18.2.0",
@@ -69,31 +71,29 @@
     "extends": null,
     "appId": "com.huayubuddy.desktop",
     "productName": "Huayu Buddy",
-{
-  "files": [
-    "build/**/*",
-    "electron/**/*",
-    "server/**/*",
-    "node_modules/**/*",
-    "package.json",
-    "package-lock.json",
-    "!server/node_modules/**"
-  ]
-}
-    "extraMetadata": {
-      "main": "electron/main.js"
-    },
-    "asar": true,
-    "win": {
-      "target": [
-        {
-          "target": "portable",
-          "arch": [
-            "x64"
-          ]
-        }
-      ],
-      "artifactName": "HuayuBuddy-${version}-portable.exe"
-    }
+    "files": [
+      "build/**/*",
+      "electron/**/*",
+      "server/**/*",
+      "node_modules/**/*",
+      "package.json",
+      "package-lock.json",
+      "!server/node_modules/**"
+    ]
+  },
+  "extraMetadata": {
+    "main": "electron/main.js"
+  },
+  "asar": true,
+  "win": {
+    "target": [
+      {
+        "target": "portable",
+        "arch": [
+          "x64"
+        ]
+      }
+    ],
+    "artifactName": "HuayuBuddy-${version}-portable.exe"
   }
 }
